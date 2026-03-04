@@ -150,7 +150,9 @@ Open in browser:
   Parameter   Description
   ----------- ----------------------------
   search      Search by name or email
+  
   page        Pagination page
+  
   per_page    Results per page (min 1 and max 100)
 
 ### Example Request for GET
