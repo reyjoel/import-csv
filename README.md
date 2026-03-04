@@ -147,11 +147,12 @@ Open in browser:
 
 ### Query Parameters for GET
 
-  Parameter       Description
-  -----------     ----------------------------
-  search          Search by name or email
-  page            Pagination page
-  per_page        Results per page (min 1 and max 100)
+    Parameter      Description
+    ------------   ---------------------------
+    search         Search by name or email
+    page           Pagination page
+    per_page       Results per page (min 1 and max 100)
+    ------------   ---------------------------
 
 ### Example Request for GET
 
@@ -224,9 +225,9 @@ Open in browser:
 
 ### Query Parameters for PUT
 
-  Parameter   Description
-  ----------- ----------------------------
-  id          Customer ID
+    Parameter   Description
+    ---------   ----------------------------
+    id          Customer ID
 
 ### Example Request for PUT
 
@@ -266,7 +267,7 @@ Open in browser:
 ### Query Parameters for DELETE
 
   Parameter   Description
-  ----------- ----------------------------
+  ---------   ----------------------------
   id          Customer ID
 
 ### Example Request for DELETE
