@@ -1,100 +1,164 @@
-Customer Import & API System
+# Customer Import & API System
 
-A Laravel-based ETL and API application that:
+![Laravel](https://img.shields.io/badge/Laravel-10-red)
+![PHP](https://img.shields.io/badge/PHP-8%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-Imports customer data from a CSV file
+A Laravel-based ETL and API application that imports customer data from
+CSV files and exposes it through a paginated REST API with a simple
+asynchronous frontend.
 
-Stores data efficiently using batched upserts
+------------------------------------------------------------------------
 
-Provides a paginated REST API
+## Features
 
-Includes a simple asynchronous web interface
+-   CSV customer data import
+-   Memory-efficient file streaming using `SplFileObject`
+-   Batched database upserts for performance
+-   REST API with pagination and search
+-   Simple async frontend using Fetch API
+-   Defensive data validation
+-   Clean and maintainable Laravel structure
 
-Overview
+------------------------------------------------------------------------
 
-This project demonstrates:
+## Architecture Overview
 
-CSV streaming using SplFileObject
+    CSV File
+       │
+       ▼
+    Artisan Command (import:customers)
+       │
+       ▼
+    Batch Processing (500 rows)
+       │
+       ▼
+    MySQL Database
+       │
+       ▼
+    REST API (/api/customers)
+       │
+       ▼
+    Async Web UI
 
-Defensive ETL design
+------------------------------------------------------------------------
 
-Batched database upserts for performance
+## Tech Stack
 
-Input validation
+  Technology   Purpose
+  ------------ ---------------------
+  Laravel      Backend framework
+  PHP 8+       Application runtime
+  MySQL        Database
+  JavaScript   Async frontend
+  Fetch API    Client data loading
 
-RESTful API design
+------------------------------------------------------------------------
 
-Asynchronous frontend data loading
+## Project Structure
 
-The focus is on performance, maintainability, and clean architecture.
+    app/
+     ├── Console/Commands
+     │    └── ImportCustomers.php
+     ├── Http/Controllers
+     │    └── Api/CustomerController.php
+     ├── Models
+     │    └── Customer.php
 
-Architecture
+    database/
+     └── migrations
 
-CSV File
-↓
-Artisan Command (import:customers)
-↓
-Batch Upsert (500 rows per batch)
-↓
-MySQL Database
-↓
-REST API (/api/customers)
-↓
-Async Web UI (Fetch API)
+    resources/
+     └── views/customers.blade.php
 
-Tech Stack
+    data/
+     └── customers.csv
 
-Laravel
+------------------------------------------------------------------------
 
-PHP 8+
+## Installation
 
-MySQL
+### Clone the repository
 
-Vanilla JavaScript (Fetch API)
+``` bash
+git clone https://github.com/your-username/customer-import
+cd customer-import
+```
 
-Setup Instructions
-1. Clone Repository
-git clone <your-repository-url>
-cd customer-app
-2. Install Dependencies
+### Install dependencies
+
+``` bash
 composer install
-3. Environment Setup
+```
+
+### Setup environment
+
+``` bash
 cp .env.example .env
 php artisan key:generate
+```
 
-Update your database credentials in .env.
+Update database credentials in `.env`.
 
-4. Run Migrations
+### Run migrations
+
+``` bash
 php artisan migrate
-5. Import CSV Data
+```
 
-Place your CSV file here:
+------------------------------------------------------------------------
 
-data/customers.csv
+## Import Customers
 
-Expected CSV header:
+Place the CSV file inside:
 
-id,first_name,last_name,email,gender,ip_address,company,city,title,website
+    data/customers.csv
 
-Then run:
+Expected CSV format:
 
+    id,first_name,last_name,email,gender,ip_address,company,city,title,website
+
+Run the import command:
+
+``` bash
 php artisan import:customers
-6. Start the Server
+```
+
+------------------------------------------------------------------------
+
+## Start the Application
+
+``` bash
 php artisan serve
+```
 
 Open in browser:
 
-http://localhost:8000/customers
-API Endpoint
-GET /api/customers
-Query Parameters
-Parameter	Type	Description
-search	string	Filter by name or email
-per_page	integer	Items per page (max 100)
-page	integer	Pagination page
-Example
-GET /api/customers?search=Laura&per_page=10
-Sample Response
+    http://localhost:8000/customers
+
+------------------------------------------------------------------------
+
+## API Documentation
+
+### Endpoint
+
+    GET /api/customers
+
+### Query Parameters
+
+  Parameter   Description
+  ----------- ----------------------------
+  search      Search by name or email
+  page        Pagination page
+  per_page    Results per page (max 100)
+
+### Example Request
+
+    GET /api/customers?search=Laura&per_page=10
+
+### Example Response
+
+``` json
 {
   "current_page": 1,
   "data": [
@@ -110,44 +174,62 @@ Sample Response
   "per_page": 10,
   "total": 50
 }
-Performance Considerations
+```
 
-Uses SplFileObject for memory-efficient streaming
+------------------------------------------------------------------------
 
-Uses upsert() for batched database operations
+## Performance Considerations
 
-Batch size: 500 rows
+The import process was designed to handle large CSV files efficiently.
 
-Wrapped in a transaction for atomicity
+Key optimizations:
 
-Skips malformed rows
+-   Streaming CSV reading with `SplFileObject`
+-   Batch upserts (500 rows per query)
+-   Transaction wrapping for atomic operations
+-   Skipping malformed rows
+-   Email normalization
 
-Normalizes email input
+------------------------------------------------------------------------
 
-Designed to handle large CSV datasets efficiently.
+## Security Considerations
 
-Security Considerations
+-   Input validation for API queries
+-   Pagination limits to prevent abuse
+-   Mass assignment protection using `$fillable`
+-   Unique email constraint
+-   No raw SQL queries
 
-Input validation on API requests
+------------------------------------------------------------------------
 
-Unique constraint on email
+## Testing
 
-Controlled pagination limits
+Run tests using:
 
-No raw SQL queries
-
-Mass assignment protection via $fillable
-
-Testing
-
-Run tests with:
-
+``` bash
 php artisan test
+```
 
 Future improvements:
 
-Feature tests for CSV import
+-   CSV import feature tests
+-   API endpoint tests
+-   Validation tests
 
-API endpoint tests
+------------------------------------------------------------------------
 
-Import validation tests
+## Future Improvements
+
+-   Queue-based background imports
+-   Import progress tracking
+-   Failed row logging
+-   API authentication (Laravel Sanctum)
+-   Docker support
+-   Caching layer (Redis)
+-   Advanced filtering and sorting
+
+------------------------------------------------------------------------
+
+## License
+
+MIT
