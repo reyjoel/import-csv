@@ -2,7 +2,6 @@
 
 ![Laravel](https://img.shields.io/badge/Laravel-10-red)
 ![PHP](https://img.shields.io/badge/PHP-8%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 A Laravel-based ETL and API application that imports customer data from
 CSV files and exposes it through a paginated REST API with a simple
@@ -45,8 +44,6 @@ asynchronous frontend.
 
 ## Tech Stack
 
-  Technology   Purpose
-  ------------ ---------------------
   Laravel      Backend framework
   PHP 8+       Application runtime
   MySQL        Database
@@ -61,7 +58,7 @@ asynchronous frontend.
      ├── Console/Commands
      │    └── ImportCustomers.php
      ├── Http/Controllers
-     │    └── Api/CustomerController.php
+     │    └── CustomerController.php
      ├── Models
      │    └── Customer.php
 
@@ -81,8 +78,8 @@ asynchronous frontend.
 ### Clone the repository
 
 ``` bash
-git clone https://github.com/your-username/customer-import
-cd customer-import
+git https://github.com/reyjoel/import-csv.git
+cd import-csv
 ```
 
 ### Install dependencies
@@ -121,7 +118,7 @@ Expected CSV format:
 Run the import command:
 
 ``` bash
-php artisan import:customers
+php artisan app:import-customers
 ```
 
 ------------------------------------------------------------------------
@@ -142,21 +139,25 @@ Open in browser:
 
 ### Endpoint
 
-    GET /api/customers
+    GET       /api/customers
+    POST      /api/customers
+    GET       /api/customers/{id}
+    PUT       /api/customers/{id}
+    DELETE    /api/customers/{id}
 
-### Query Parameters
+### Query Parameters for GET
 
   Parameter   Description
   ----------- ----------------------------
   search      Search by name or email
   page        Pagination page
-  per_page    Results per page (max 100)
+  per_page    Results per page (min 1 and max 100)
 
-### Example Request
+### Example Request for GET
 
-    GET /api/customers?search=Laura&per_page=10
+    GET /api/customers?search=Laura&page=1&per_page=10
 
-### Example Response
+### Example Response for GET
 
 ``` json
 {
@@ -167,12 +168,116 @@ Open in browser:
       "first_name": "Laura",
       "last_name": "Richards",
       "email": "lrichards0@reverbnation.com",
-      "company": "Meezzy"
+      "gender": "Male",
+      "ip_address": "73.114.57.213",
+      "company": "Meezzy",
+      "city": "Brody",
+      "title": "Research Associate",
+      "website": "https://rediff.com/sit/amet/diam.aspx?non=donec&sodales=ut",
+      "created_at": "2026-03-04T01:03:51.000000Z",
+      "updated_at": "2026-03-04T01:03:51.000000Z"
     }
   ],
   "last_page": 5,
   "per_page": 10,
   "total": 50
+}
+```
+
+### Example Request for POST
+    POST /api/customers
+
+  ``` json
+  {
+    "id": 1, // optional since it is auto increment
+    "first_name": "Laura",
+    "last_name": "Richards",
+    "email": "lrichards0@reverbnation.com",
+    "gender": "Male",
+    "ip_address": "73.114.57.213",
+    "company": "Meezzy",
+    "city": "Brody",
+    "title": "Research Associate",
+    "website": "https://rediff.com/sit/amet/diam.aspx?non=donec&sodales=ut",
+  }
+```
+
+### Example Response for POST
+
+``` json
+{
+	"message": "Customer created",
+	"data": {
+      "id": 1,
+      "first_name": "Laura",
+      "last_name": "Richards",
+      "email": "lrichards0@reverbnation.com",
+      "gender": "Male",
+      "ip_address": "73.114.57.213",
+      "company": "Meezzy",
+      "city": "Brody",
+      "title": "Research Associate",
+      "website": "https://rediff.com/sit/amet/diam.aspx?non=donec&sodales=ut",
+    }
+}
+```
+
+### Query Parameters for PUT
+
+  Parameter   Description
+  ----------- ----------------------------
+  id          Customer ID
+
+### Example Request for PUT
+
+    PUT /api/customers/1
+
+``` json
+{
+  "id": 1,
+  "first_name": "Laura Jane",
+  "last_name": "Richards",
+  "email": "lrichards0@reverbnation.com",
+  "gender": "Male",
+  "ip_address": "73.114.57.213",
+  "company": "Meezzy",
+  "city": "Brody",
+  "title": "Research Associate",
+  "website": "https://rediff.com/sit/amet/diam.aspx?non=donec&sodales=ut",
+}
+```
+
+### Example Response for PUT
+
+``` json
+{
+  "first_name": "Laura Jane",
+  "last_name": "Richards",
+  "email": "lrichards0@reverbnation.com",
+  "gender": "Male",
+  "ip_address": "73.114.57.213",
+  "company": "Meezzy",
+  "city": "Brody",
+  "title": "Research Associate",
+  "website": "https://rediff.com/sit/amet/diam.aspx?non=donec&sodales=ut",
+}
+```
+
+### Query Parameters for DELETE
+
+  Parameter   Description
+  ----------- ----------------------------
+  id          Customer ID
+
+### Example Request for DELETE
+
+    DELETE /api/customers/1
+
+### Example Response for DELETE
+
+``` json
+{
+  "message": "Customer deleted successfully"
 }
 ```
 
@@ -209,27 +314,4 @@ Run tests using:
 ``` bash
 php artisan test
 ```
-
-Future improvements:
-
--   CSV import feature tests
--   API endpoint tests
--   Validation tests
-
 ------------------------------------------------------------------------
-
-## Future Improvements
-
--   Queue-based background imports
--   Import progress tracking
--   Failed row logging
--   API authentication (Laravel Sanctum)
--   Docker support
--   Caching layer (Redis)
--   Advanced filtering and sorting
-
-------------------------------------------------------------------------
-
-## License
-
-MIT
